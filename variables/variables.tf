@@ -1,11 +1,11 @@
 variable "ingressrules" {
   type    = list(number)
-  default = [80, 443]
+  default = [443, 943, 22]
 }
 
 variable "egressrules" {
   type    = list(number)
-  default = [80, 443, 3306, 53, 8080]
+  default = [443, 943, 1194]
 }
 
 output "egress" {

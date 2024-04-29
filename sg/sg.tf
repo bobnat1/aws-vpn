@@ -3,7 +3,7 @@ module "variables" {
 }
 
 resource "aws_security_group" "webtraffic" {
-  name = "Allow HTTPS"
+  name = "Allow OpenVPN Ports"
 
   dynamic "ingress" {
     iterator = port
