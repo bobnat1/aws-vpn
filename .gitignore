@@ -1,4 +1,9 @@
-.terraform/
+.terraform
+**/.terraform/*
+*.tfoverride
+.envrc
+.terraformrc
+terraform.rc
 *.hcl
 *.backup
 *.tfstate
