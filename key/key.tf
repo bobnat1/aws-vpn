@@ -6,6 +6,10 @@ resource "tls_private_key" "ssh-key" {
 resource "aws_key_pair" "key_pair" {
     key_name = "Generated Key"
     public_key = tls_private_key.ssh-key.public_key_openssh
+
+    provisioner "local-exec" { # Create "myKey.pem" to your computer!!
+    command = "echo '${tls_private_key.ssh-key.private_key_pem}' > ./myKey.pem"
+  }
 }
 
 output priv_key {

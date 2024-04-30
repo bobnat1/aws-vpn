@@ -8,3 +8,5 @@ terraform.rc
 *.backup
 *.tfstate
 *.pem
+*.ovpn
+*.env

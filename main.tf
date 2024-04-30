@@ -1,3 +1,7 @@
+provider "aws" {
+    region = "us-west-1"
+}
+
 module "security" {
     source = "./sg"
 }
@@ -12,6 +16,11 @@ module "front_end" {
     ssh_key = module.ssh_key.gen_key_name
 }
 
-provider "aws" {
-    region = "us-west-1"
+output "private_key" {
+    sensitive = true
+    value = module.ssh_key.priv_key
+}
+
+output "public_ip_address" {
+    value = module.front_end.pub_ip
 }
