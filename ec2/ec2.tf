@@ -12,6 +12,7 @@ resource "aws_instance" "webserver" {
     instance_type   = "t2.micro"
     security_groups = [var.security]
     key_name = var.ssh_key
+    # user_data = file("ec2/openvpn-install.sh")
 
     tags = {
         Name = "Front End"

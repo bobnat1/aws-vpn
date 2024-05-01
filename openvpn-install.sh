@@ -4,6 +4,18 @@
 # Secure OpenVPN server installer for Debian, Ubuntu, CentOS, Amazon Linux 2, Fedora, Oracle Linux 8, Arch Linux, Rocky Linux and AlmaLinux.
 # https://github.com/angristan/openvpn-install
 
+AUTO_INSTALL=y
+APPROVE_INSTALL=y
+APPROVE_IP=y
+IPV6_SUPPORT=n
+PORT_CHOICE=1
+PROTOCOL_CHOICE=2
+DNS=1
+COMPRESSION_ENABLED=n
+CUSTOMIZE_ENC=n
+CLIENT=clientname
+PASS=1
+
 function isRoot() {
 	if [ "$EUID" -ne 0 ]; then
 		return 1
