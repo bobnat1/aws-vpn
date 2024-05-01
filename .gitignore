@@ -9,4 +9,4 @@ terraform.rc
 *.tfstate
 *.pem
 *.ovpn
-*.env
+.env
