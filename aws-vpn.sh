@@ -47,24 +47,24 @@ function create_instance {
 }
 
 function openvpn_install {
-        echo "installing script.."
-        sleep 2
-        bash ./install-open-vpn.sh
-        echo "openvpn installed!"
-        sleep 2 
-        echo "retrieving .ovpn file for client.."
-        sleep 2
-        bash ./get-config.sh
-        echo ".ovpn file retrieved!"
+    echo "installing script.."
+    sleep 2
+    bash ./install-open-vpn.sh
+    echo "openvpn installed!"
+    sleep 2 
+    echo "retrieving .ovpn file for client.."
+    sleep 2
+    bash ./get-config.sh
+    echo ".ovpn file retrieved!"
 }
 
 function usage {
- echo "Usage: $0 [OPTIONS]"
- echo "Options:"
- echo " -h, --help      Display this help message"
- echo " -d, --destroy   Destroy current instance"
- echo " -c, --create    Create an instance"
- echo " -s, --ssh       SSH into instance"
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo " -h, --help      Display this help message"
+    echo " -d, --destroy   Destroy current instance"
+    echo " -c, --create    Create an instance"
+    echo " -s, --ssh       SSH into instance"
 }
 
 function handle_args {
