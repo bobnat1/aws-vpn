@@ -41,6 +41,7 @@ function create_instance {
         echo "creating ssh key chain.."
         sleep 3
         terraform output -raw private_key > myKey.pem
+        chmod 400 myKey.pem
         terraform output public_ip_address > .env
         ACTIVE_VM=true
     else
