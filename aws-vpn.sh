@@ -26,6 +26,9 @@ function is_active_instance {
 function destroy_instance {
     terraform destroy
     ACTIVE_VM=false
+    echo "cleaning up directory..."
+    sleep 1
+    rm client**.ovpn 2>/dev/null  
 }
 
 function create_instance {
@@ -71,7 +74,7 @@ function handle_args {
     while [ $# -gt 0 ]; do  
         case $1 in
             -h | --help)
-            echo "testing help"
+            usage
             exit 0
             ;;
             -d | --destroy)

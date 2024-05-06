@@ -15,7 +15,7 @@ resource "aws_instance" "webserver" {
     # user_data = file("ec2/openvpn-install.sh")
 
     tags = {
-        Name = "Front End"
+        Name = "VPN Server"
     }
 }
 
