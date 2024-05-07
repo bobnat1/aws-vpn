@@ -28,7 +28,8 @@ function destroy_instance {
     ACTIVE_VM=false
     echo "cleaning up directory..."
     sleep 1
-    rm client**.ovpn 2>/dev/null  
+    rm client**.ovpn 2>/dev/null
+    yes "yes" | rm myKey.pem
 }
 
 function create_instance {
