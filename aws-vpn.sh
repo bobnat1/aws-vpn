@@ -1,12 +1,20 @@
 #!/bin/bash
 
+AUTOMATE_TERRAFORM=false
+ACTIVE_VM=false
+
 function ssh_into_session {
     if is_active_instance
     then
         echo "connecting to ec2 instance..."
         sleep 3
         chmod +x ssh.sh
-        bash ./ssh.sh
+        if bash ./ssh.sh 2>tf.log
+        then    
+            :
+        else
+            exit 1
+        fi
     else
         echo "no active instances"
         exit 1
@@ -24,18 +32,38 @@ function is_active_instance {
 }
 
 function destroy_instance {
-    terraform destroy
-    ACTIVE_VM=false
-    echo "cleaning up directory..."
-    sleep 1
-    rm client**.ovpn 2>/dev/null
-    yes "yes" | rm myKey.pem
+    if $AUTOMATE_TERRAFORM;
+    then        
+        terraform destroy -auto-approve
+    else
+        terraform destroy
+    fi
+    
+    if ! is_active_instance
+    then
+        echo "instance destroyed!"
+        sleep 1
+        # ACTIVE_VM=false
+        echo "cleaning up directory..."
+        sleep 1
+        rm client**.ovpn 2>/dev/null
+        yes "yes" | rm myKey.pem 2>/dev/null
+        exit 0
+    else
+        echo "Something went wrong, couldn't destroy instance."
+        exit 1
+    fi
 }
 
 function create_instance {
     echo "initializing Terraform.."
     terraform init
-    terraform apply
+    if $AUTOMATE_TERRAFORM;
+    then
+        terraform apply -auto-approve
+    else
+        terraform apply
+    fi
     if is_active_instance
      then
         echo "instance created!"
@@ -44,7 +72,7 @@ function create_instance {
         terraform output -raw private_key > myKey.pem
         chmod 400 myKey.pem
         terraform output public_ip_address > .env
-        ACTIVE_VM=true
+        # ACTIVE_VM=true
     else
         echo "instance not created"
         exit 1
@@ -54,13 +82,21 @@ function create_instance {
 function openvpn_install {
     echo "installing script.."
     sleep 2
-    bash ./install-open-vpn.sh
-    echo "openvpn installed!"
-    sleep 2 
-    echo "retrieving .ovpn file for client.."
-    sleep 2
-    bash ./get-config.sh
-    echo ".ovpn file retrieved!"
+    if bash ./install-open-vpn.sh 2>tf.log
+    then    
+        echo "openvpn installed!"
+        sleep 2 
+        echo "retrieving .ovpn file for client.."
+        sleep 2
+        if bash ./get-config.sh 2>tf.log
+        then
+            echo ".ovpn file retrieved!"
+        else
+            exit 1
+        fi
+    else
+        exit 1
+    fi
 }
 
 function usage {
@@ -80,10 +116,12 @@ function handle_args {
             exit 0
             ;;
             -d | --destroy)
+            AUTOMATE_TERRAFORM=true
             destroy_instance
             exit 0
             ;;
             -c | --create)
+            AUTOMATE_TERRAFORM=true
             create_instance
             openvpn_install
             exit 0
@@ -102,7 +140,6 @@ function handle_args {
     done
 }
 
-ACTIVE_VM=false
 # check if instance is active
 is_active_instance
 # check for flags
@@ -136,7 +173,12 @@ do
 
     elif [ "$usrstart" = "s" ] || [ "$usrstart" = "ssh" ]; then
         if [ "$ACTIVE_VM" = "true" ]; then
-            ssh_into_session
+            if ssh_into_session
+            then 
+                :
+            else
+                exit 1
+            fi
         else
             echo "no VPNs currently active"
             sleep 3
